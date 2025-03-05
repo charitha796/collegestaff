@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Staff Portal</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .auth-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .section {
+            width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        textarea, input, select {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #registerPage, #loginPage, #portalPage {
+            display: none;
+        }
+        .nav {
+            background-color: #333;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+        }
+        .nav a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .nav a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .content {
+            padding: 20px;
+        }
+        .feature {
+            display: none;
+        }
+        #profile {
+            display: block;
+        }
+        .logout-btn {
+            float: right;
+            background-color: #f44336;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div id="registerPage" class="auth-container">
+        <h2>Register for College Staff Portal</h2>
+        <input type="text" id="newUsername" placeholder="New Username">
+        <input type="password" id="newPassword" placeholder="New Password">
+        <button onclick="register()">Register</button>
+        <p>Already have an account? <a href="#" onclick="showLoginPage()">Login here</a></p>
+    </div>
+
+    <div id="loginPage" class="auth-container">
+        <h2>Login to College Staff Portal</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p id="loginError" style="color:red;"></p>
+        <p>Don't have an account? <a href="#" onclick="showRegisterPage()">Register here</a></p>
+    </div>
+
+    <div id="portalPage">
+        <div class="nav">
+            <a href="#" class="nav-link active" data-target="profile">Profile</a>
+            <a href="#" class="nav-link" data-target="reminder">Speech Reminder</a>
+            <a href="#" class="nav-link" data-target="task">Task Submission</a>
+            <a href="#" class="nav-link" data-target="leave">Leave Management</a>
+            <a href="#" class="nav-link" data-target="substitution">Substitution</a>
+            <a href="#" class="nav-link" data-target="roomBooking">lassRoom Booking</a>
+            <a href="#" class="logout-btn" onclick="logout()">Logout</a>
+        </div>
+        
+        <div class="container">
+            <div id="profile" class="feature section">
+                <h3>Profile</h3>
+                <button onclick="document.getElementById('profilePic').click()">Update Photo</button>
+                <input type="file" id="profilePic" accept="image/*" style="display: none;">
+                <input type="text" id="fullName" placeholder="Full Name">
+                <input type="text" id="idNumber" placeholder="ID Number">
+                <input type="text" id="phoneNumber" placeholder="Phone Number">
+                <input type="text" id="departmentName" placeholder="Department Name">
+                <input type="email" id="email" placeholder="Email">
+                <button onclick="saveProfile()">Save Profile</button>
+            </div>
+
+            <div id="reminder" class="feature section">
+                <h3>Speech Reminder System</h3>
+                <textarea id="text" placeholder="Enter reminders (comma-separated)..."></textarea>
+                <div id="timeInputs">
+                    <label>Set Reminder Time:</label>
+                    <input type="time" class="reminderTime">
+                </div>
+                <button onclick="addTimeInput()">➕ Add More Times</button>
+                <button onclick="setReminder()">Set Reminder</button>
+                <ul id="reminderList"></ul>
+            </div>
+
+            <div id="task" class="feature section">
+                <h3>Task Submission</h3>
+                <textarea id="task-text" placeholder="Enter your task..."></textarea>
+                <button onclick="submitTask()">Submit Task</button>
+                <ul id="taskList"></ul>
+            </div>
+
+            <div id="leave" class="feature section">
+                <h3>Leave Management</h3>
+                <textarea id="leaveReason" placeholder="Reason for leave..."></textarea>
+                <input type="date" id="leaveDate">
+                <button onclick="applyLeave()">Apply Leave</button>
+            </div>
+
+            <div id="substitution" class="feature section">
+                <h3>Substitution Requests</h3>
+                <input type="text" id="substitutionDetails" placeholder="Enter details...">
+                <button onclick="requestSubstitution()">Request Substitution</button>
+            </div>
+
+            <div id="roomBooking" class="feature section">
+                <h3>ClassRoom Booking</h3>
+                <input type="text" id="roomNumber" placeholder="Enter Room Number">
+                <input type="datetime-local" id="roomDateTime">
+                <button onclick="bookRoom()">Book Room</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let users = JSON.parse(localStorage.getItem("users")) || {};
+        
+        // Check if the user is already logged in
+        window.onload = function() {
+            let currentUser = localStorage.getItem("currentUser");
+            if (currentUser) {
+                // User is logged in, show portal
+                document.getElementById("portalPage").style.display = "block";
+                loadUserData();
+            } else {
+                // Check if any users exist
+                if (Object.keys(users).length > 0) {
+                    // Show login for existing users
+                    document.getElementById("loginPage").style.display = "block";
+                } else {
+                    // Show registration for new users
+                    document.getElementById("registerPage").style.display = "block";
+                }
+            }
+        };
+
+        function showRegisterPage() {
+            document.getElementById("loginPage").style.display = "none";
+            document.getElementById("registerPage").style.display = "block";
+        }
+
+        function showLoginPage() {
+            document.getElementById("registerPage").style.display = "none";
+            document.getElementById("loginPage").style.display = "block";
+        }
+
+        function register() {
+            let newUsername = document.getElementById("newUsername").value;
+            let newPassword = document.getElementById("newPassword").value;
+            if (newUsername && newPassword) {
+                if (users[newUsername]) {
+                    alert("Username already exists. Try logging in.");
+                    showLoginPage();
+                } else {
+                    users[newUsername] = newPassword;
+                    localStorage.setItem("users", JSON.stringify(users));
+                    alert("Registration successful! You can now log in.");
+                    showLoginPage();
+                }
+            } else {
+                alert("Please enter a valid username and password.");
+            }
+        }
+
+        function login() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            if (users[username] && users[username] === password) {
+                localStorage.setItem("currentUser", username);
+                document.getElementById("loginPage").style.display = "none";
+                document.getElementById("portalPage").style.display = "block";
+                loadUserData();
+            } else {
+                document.getElementById("loginError").textContent = "Invalid credentials!";
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("currentUser");
+            document.getElementById("portalPage").style.display = "none";
+            if (Object.keys(users).length > 0) {
+                document.getElementById("loginPage").style.display = "block";
+            } else {
+                document.getElementById("registerPage").style.display = "block";
+            }
+        }
+
+        function loadUserData() {
+            // You can load user profile data here from localStorage if needed
+        }
+
+        function saveProfile() {
+            let currentUser = localStorage.getItem("currentUser");
+            let profileData = {
+                fullName: document.getElementById("fullName").value,
+                idNumber: document.getElementById("idNumber").value,
+                phoneNumber: document.getElementById("phoneNumber").value,
+                departmentName: document.getElementById("departmentName").value,
+                email: document.getElementById("email").value
+            };
+            localStorage.setItem(`profile_${currentUser}`, JSON.stringify(profileData));
+            alert("Profile saved successfully!");
+        }
+
+        // Navigation functionality
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Hide all feature sections
+                document.querySelectorAll('.feature').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show the requested section
+                let target = this.getAttribute('data-target');
+                document.getElementById(target).style.display = 'block';
+            });
+        });
+
+        function addTimeInput() {
+            let timeInputsDiv = document.getElementById("timeInputs");
+            let newInput = document.createElement("div");
+            newInput.innerHTML = `<input type="time" class="reminderTime">`;
+            timeInputsDiv.appendChild(newInput);
+        }
+
+        function setReminder() {
+            let text = document.getElementById("text").value;
+            let timeInputs = document.querySelectorAll(".reminderTime");
+
+            if (text.trim() === "" || timeInputs.length === 0) {
+                alert("Please enter a reminder and set at least one time.");
+                return;
+            }
+
+            let texts = text.split(",").map(t => t.trim()).filter(t => t !== "");
+            let reminders = [];
+
+            timeInputs.forEach((input, index) => {
+                let time = input.value;
+                if (time !== "") {
+                    reminders.push({ text: texts[index % texts.length], time });
+                }
+            });
+
+            reminders.forEach(reminder => {
+                let li = document.createElement("li");
+                li.textContent = `${reminder.text} at ${reminder.time}`;
+                document.getElementById("reminderList").appendChild(li);
+                let speech = new SpeechSynthesisUtterance(reminder.text);
+                speechSynthesis.speak(speech);
+            });
+        }
+
+        function submitTask() {
+            let task = document.getElementById("task-text").value;
+            if (task.trim() === "") {
+                alert("Please enter a task.");
+                return;
+            }
+            let li = document.createElement("li");
+            li.textContent = task;
+            document.getElementById("taskList").appendChild(li);
+            document.getElementById("task-text").value = "";
+            alert("Task submitted successfully.");
+        }
+
+        function applyLeave() {
+            let reason = document.getElementById("leaveReason").value;
+            let date = document.getElementById("leaveDate").value;
+            
+            if (reason.trim() === "" || !date) {
+                alert("Please enter a reason and select a date.");
+                return;
+            }
+            
+            alert("Leave application submitted.");
+            document.getElementById("leaveReason").value = "";
+            document.getElementById("leaveDate").value = "";
+        }
+
+        function requestSubstitution() {
+            let details = document.getElementById("substitutionDetails").value;
+            
+            if (details.trim() === "") {
+                alert("Please enter substitution details.");
+                return;
+            }
+            
+            alert("Substitution request sent.");
+            document.getElementById("substitutionDetails").value = "";
+        }
+
+        function bookRoom() {
+            let roomNumber = document.getElementById("roomNumber").value;
+            let dateTime = document.getElementById("roomDateTime").value;
+            
+            if (roomNumber.trim() === "" || !dateTime) {
+                alert("Please enter a room number and select date/time.");
+                return;
+            }
+            
+            alert("Room booked successfully.");
+            document.getElementById("roomNumber").value = "";
+            document.getElementById("roomDateTime").value = "";
+        }
+    </script>
+</body>
+</html>
